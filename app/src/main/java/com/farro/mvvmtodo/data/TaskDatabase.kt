@@ -24,32 +24,17 @@ abstract class TaskDatabase : RoomDatabase() {
 
             val dao = database.get().taskDao()
 
-            val repetitiveTask = "Call Roger Farro"
-
             applicationScope.launch {
                 dao.insert(Task("Wash the dishes", important = true))
                 dao.insert(Task("Do the laundry"))
                 dao.insert(Task("Do daily programming"))
                 dao.insert(Task("Buy groceries", important = true))
                 dao.insert(Task("Eat my favorite oatmeal", completed = true))
-                dao.insert(Task(name = repetitiveTask))
-                dao.insert(Task(name = repetitiveTask))
-                dao.insert(Task(name = repetitiveTask))
-                dao.insert(Task(name = repetitiveTask))
-                dao.insert(Task(name = repetitiveTask))
-                dao.insert(Task(name = repetitiveTask))
-                dao.insert(Task(name = repetitiveTask))
-                dao.insert(Task(name = repetitiveTask))
-                dao.insert(Task(name = repetitiveTask))
-                dao.insert(Task(name = repetitiveTask))
-                dao.insert(Task(name = repetitiveTask))
-                dao.insert(Task(name = repetitiveTask))
-                dao.insert(Task(name = repetitiveTask))
-                dao.insert(Task(name = repetitiveTask))
-                dao.insert(Task(name = repetitiveTask))
-                dao.insert(Task(name = repetitiveTask))
-                dao.insert(Task(name = repetitiveTask))
-                dao.insert(Task(name = repetitiveTask))
+                dao.insert(Task("Call Roger Farro"))
+                dao.insert(Task("Call Chin Gonzales"))
+                dao.insert(Task("Do capstone/thesis", important = true))
+                dao.insert(Task("Create questions for interview", important = true))
+                dao.insert(Task("Play tong its go", completed = true))
             }
         }
     }

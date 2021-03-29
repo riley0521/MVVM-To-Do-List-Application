@@ -15,3 +15,17 @@ o
 ?app/src/main/java/com/farro/mvvmtodo/ui/tasks/TasksViewModel.kt,f\0\f062068645129e064faf4d202625e3bf23e3893a
 i
 9app/src/main/java/com/farro/mvvmtodo/data/TaskDatabase.kt,a\c\ac459f4b425f5eede2a696648ec6961f77054ffd
+v
+Fapp/src/androidTest/java/com/farro/mvvmtodo/ExampleInstrumentedTest.kt,5\c\5c7a706e69e912983db9fdb468d3b401f66d4b3d
+g
+7app/src/test/java/com/farro/mvvmtodo/ExampleUnitTest.kt,3\5\352aa146503da639773600bd7f840452d7ceb6bc
+P
+ app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
+<
+build.gradle,f\0\f07866736216be0ee2aba49e392191aeae700a35
+@
+app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
+m
+=app/src/main/java/com/farro/mvvmtodo/ui/tasks/TasksAdapter.kt,c\a\ca80f1322def77d8665c05a1dafbf20795e5be95
+t
+Dapp/src/main/java/com/farro/mvvmtodo/ui/tasks/AddEditTaskFragment.kt,1\9\195dcc2c050c557c3185bad40f27644a9109a44c
