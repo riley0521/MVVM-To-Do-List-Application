@@ -25,35 +25,47 @@ class TasksAdapter(private val listener: OnItemClickListener) : ListAdapter<Task
         RecyclerView.ViewHolder(binding.root) {
 
             init {
-                binding.root.setOnClickListener {
-                    val position = adapterPosition
-                    if(position != RecyclerView.NO_POSITION) {
-                        val task = getItem(position)
-                        listener.onItemClick(task)
+
+                binding.apply {
+                    root.setOnClickListener {
+                        val position = adapterPosition
+                        if (position != RecyclerView.NO_POSITION) {
+                            val task = getItem(position)
+                            listener.onItemClick(task)
+                        }
+                    }
+
+                    checkBoxCompleted.setOnClickListener {
+                        val position = adapterPosition
+                        if (position != RecyclerView.NO_POSITION) {
+                            val task = getItem(position)
+                            listener.onCheckBoxClick(task, checkBoxCompleted.isChecked)
+                        }
                     }
                 }
             }
 
-            fun bind(task: Task) {
-                binding.apply {
-                    checkBoxCompleted.isChecked = task.completed
-                    textViewName.text = task.name
-                    textViewName.paint.isStrikeThruText = task.completed
-                    labelPriority.isVisible = task.important
-                }
+        fun bind(task: Task) {
+            binding.apply {
+                checkBoxCompleted.isChecked = task.completed
+                textViewName.text = task.name
+                textViewName.paint.isStrikeThruText = task.completed
+                labelPriority.isVisible = task.important
             }
+        }
     }
 
-    class DiffCallback: DiffUtil.ItemCallback<Task>() {
+    interface OnItemClickListener {
+        fun onItemClick(task: Task)
+        fun onCheckBoxClick(task: Task, isChecked: Boolean)
+    }
+
+    class DiffCallback : DiffUtil.ItemCallback<Task>() {
 
         override fun areItemsTheSame(oldItem: Task, newItem: Task) =
             oldItem.id == newItem.id
 
         override fun areContentsTheSame(oldItem: Task, newItem: Task) =
             oldItem == newItem
-    }
-
-    interface OnItemClickListener {
-        fun onItemClick(task: Task)
     }
 }

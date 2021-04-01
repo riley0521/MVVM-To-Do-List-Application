@@ -29,3 +29,9 @@ m
 =app/src/main/java/com/farro/mvvmtodo/ui/tasks/TasksAdapter.kt,c\a\ca80f1322def77d8665c05a1dafbf20795e5be95
 t
 Dapp/src/main/java/com/farro/mvvmtodo/ui/tasks/AddEditTaskFragment.kt,1\9\195dcc2c050c557c3185bad40f27644a9109a44c
+S
+#.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
+d
+4app/src/main/java/com/farro/mvvmtodo/util/ViewExt.kt,4\8\4801acb24e1b3d78043216e3559ef1d74dc21076
+]
+-app/src/main/res/menu/menu_fragment_tasks.xml,6\a\6a6230eedd13f325a9375a1414a63c8ba36d6e5c
