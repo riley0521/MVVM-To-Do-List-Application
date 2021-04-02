@@ -9,21 +9,25 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.farro.mvvmtodo.R
 import com.farro.mvvmtodo.data.SortOrder
 import com.farro.mvvmtodo.data.Task
 import com.farro.mvvmtodo.databinding.FragmentTasksBinding
+import com.farro.mvvmtodo.util.exhaustive
 import com.farro.mvvmtodo.util.onQueryTextChanged
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClickListener {
 
-    private val viewModel: TasksViewModel by viewModels()
+    private val tasksViewModel: TasksViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,7 +36,7 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
 
         val tasksAdapter = TasksAdapter(this)
 
-        viewModel.tasks.observe(viewLifecycleOwner) {
+        tasksViewModel.tasks.observe(viewLifecycleOwner) {
             tasksAdapter.submitList(it)
         }
 
@@ -57,20 +61,55 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     val task = tasksAdapter.currentList[viewHolder.adapterPosition]
-                    viewModel.onTaskSwiped(task)
+                    tasksViewModel.onTaskSwiped(task)
                 }
             }).attachToRecyclerView(recyclerViewTasks)
+
+            fabAddTask.setOnClickListener {
+                tasksViewModel.onAddNewTaskClicked()
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            tasksViewModel.tasksEvent.collect { event ->
+                when (event) {
+                    is TasksViewModel.TasksEvent.ShowUndoDeleteMessage -> {
+                        Snackbar.make(
+                            requireView(),
+                            "Task deleted",
+                            Snackbar.LENGTH_LONG
+                        ).setAction(
+                            "UNDO"
+                        ) {
+                            tasksViewModel.onUndoDeleteClicked(event.task)
+                        }.show()
+                    }
+                    is TasksViewModel.TasksEvent.NavigateToAddTaskScreen -> {
+                        val action =
+                            TasksFragmentDirections.actionTasksFragmentToAddEditTaskFragment(title = "New Task")
+                        findNavController().navigate(R.id.action_tasksFragment_to_addEditTaskFragment)
+                    }
+                    is TasksViewModel.TasksEvent.NavigateToEditTaskScreen -> {
+                        val action =
+                            TasksFragmentDirections.actionTasksFragmentToAddEditTaskFragment(
+                                event.task,
+                                "Edit Task #${event.task.id}"
+                            )
+                        findNavController().navigate(action)
+                    }
+                }.exhaustive
+            }
         }
 
         setHasOptionsMenu(true)
     }
 
     override fun onItemClick(task: Task) {
-        viewModel.onTaskSelected(task)
+        tasksViewModel.onTaskSelected(task)
     }
 
     override fun onCheckBoxClick(task: Task, isChecked: Boolean) {
-        viewModel.onTaskCheckChanged(task, isChecked)
+        tasksViewModel.onTaskCheckChanged(task, isChecked)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -80,30 +119,30 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
         val searchView = searchItem.actionView as SearchView
 
         searchView.onQueryTextChanged {
-            viewModel.searchQuery.value = it
+            tasksViewModel.searchQuery.value = it
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             menu.findItem(R.id.action_hide_completed_tasks).isChecked =
-                viewModel.preferencesFlow.first().hideCompleted
+                tasksViewModel.preferencesFlow.first().hideCompleted
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.action_sort_by_name -> {
-                viewModel.onSortOrderSelected(SortOrder.BY_NAME)
+                tasksViewModel.onSortOrderSelected(SortOrder.BY_NAME)
                 true
             }
 
             R.id.action_sort_by_date_created -> {
-                viewModel.onSortOrderSelected(SortOrder.BY_DATE)
+                tasksViewModel.onSortOrderSelected(SortOrder.BY_DATE)
                 true
             }
 
             R.id.action_hide_completed_tasks -> {
                 item.isChecked = !item.isChecked
-                viewModel.onHideCompletedSelected(item.isChecked)
+                tasksViewModel.onHideCompletedSelected(item.isChecked)
                 true
             }
 

@@ -35,3 +35,5 @@ d
 4app/src/main/java/com/farro/mvvmtodo/util/ViewExt.kt,4\8\4801acb24e1b3d78043216e3559ef1d74dc21076
 ]
 -app/src/main/res/menu/menu_fragment_tasks.xml,6\a\6a6230eedd13f325a9375a1414a63c8ba36d6e5c
+o
+?app/src/main/java/com/farro/mvvmtodo/data/PreferencesManager.kt,3\d\3d962d581f330fda942017a1649673f4576e1e92
