@@ -7,6 +7,8 @@ import com.farro.mvvmtodo.data.PreferencesManager
 import com.farro.mvvmtodo.data.SortOrder
 import com.farro.mvvmtodo.data.Task
 import com.farro.mvvmtodo.data.TaskDao
+import com.farro.mvvmtodo.ui.ADD_TASK_RESULT_OK
+import com.farro.mvvmtodo.ui.EDIT_TASK_RESULT_OK
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
@@ -68,11 +70,28 @@ class TasksViewModel @ViewModelInject constructor(
         tasksEventChannel.send(TasksEvent.NavigateToAddTaskScreen)
     }
 
+    fun onAddEditResult(result: Int) = viewModelScope.launch {
+        when (result) {
+            ADD_TASK_RESULT_OK -> showTaskSavedConfirmationMessage("Task added successfully.")
+            EDIT_TASK_RESULT_OK -> showTaskSavedConfirmationMessage("Task updated successfully.")
+        }
+    }
+
+    private fun showTaskSavedConfirmationMessage(message: String) = viewModelScope.launch {
+        tasksEventChannel.send(TasksEvent.ShowTaskSavedConfirmationMessage(message))
+    }
+
+    fun onDeleteCompletedTasksClicked() = viewModelScope.launch {
+        tasksEventChannel.send(TasksEvent.NavigateToDeleteCompletedScreen)
+    }
+
     // We will use sealed class to hold data for us that we can send in channel
     sealed class TasksEvent {
         object NavigateToAddTaskScreen : TasksEvent()
+        object NavigateToDeleteCompletedScreen : TasksEvent()
         data class NavigateToEditTaskScreen(val task: Task) : TasksEvent()
         data class ShowUndoDeleteMessage(val task: Task) : TasksEvent()
+        data class ShowTaskSavedConfirmationMessage(val msg: String) : TasksEvent()
     }
 
     // Without DataStore Preference Manager

@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -16,6 +17,8 @@ import com.farro.mvvmtodo.R
 import com.farro.mvvmtodo.data.SortOrder
 import com.farro.mvvmtodo.data.Task
 import com.farro.mvvmtodo.databinding.FragmentTasksBinding
+import com.farro.mvvmtodo.ui.addedittask.ADD_EDIT_REQUEST
+import com.farro.mvvmtodo.ui.addedittask.ADD_EDIT_RESULT
 import com.farro.mvvmtodo.util.exhaustive
 import com.farro.mvvmtodo.util.onQueryTextChanged
 import com.google.android.material.snackbar.Snackbar
@@ -28,6 +31,8 @@ import kotlinx.coroutines.launch
 class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClickListener {
 
     private val tasksViewModel: TasksViewModel by viewModels()
+
+    private lateinit var searchView: SearchView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -70,6 +75,11 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
             }
         }
 
+        setFragmentResultListener(ADD_EDIT_REQUEST) { _, bundle ->
+            val result = bundle.getInt(ADD_EDIT_RESULT)
+            tasksViewModel.onAddEditResult(result)
+        }
+
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             tasksViewModel.tasksEvent.collect { event ->
                 when (event) {
@@ -87,7 +97,7 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
                     is TasksViewModel.TasksEvent.NavigateToAddTaskScreen -> {
                         val action =
                             TasksFragmentDirections.actionTasksFragmentToAddEditTaskFragment(title = "New Task")
-                        findNavController().navigate(R.id.action_tasksFragment_to_addEditTaskFragment)
+                        findNavController().navigate(action)
                     }
                     is TasksViewModel.TasksEvent.NavigateToEditTaskScreen -> {
                         val action =
@@ -96,6 +106,12 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
                                 "Edit Task #${event.task.id}"
                             )
                         findNavController().navigate(action)
+                    }
+                    is TasksViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {
+                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_LONG).show()
+                    }
+                    TasksViewModel.TasksEvent.NavigateToDeleteCompletedScreen -> {
+                        findNavController().navigate(R.id.action_global_deleteAllCompletedDialogFragment)
                     }
                 }.exhaustive
             }
@@ -116,7 +132,13 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
         inflater.inflate(R.menu.menu_fragment_tasks, menu)
 
         val searchItem = menu.findItem(R.id.action_search)
-        val searchView = searchItem.actionView as SearchView
+        searchView = searchItem.actionView as SearchView
+
+        val pendingQuery = tasksViewModel.searchQuery.value
+        if (pendingQuery != null && pendingQuery.isNotEmpty()) {
+            searchItem.expandActionView()
+            searchView.setQuery(pendingQuery, false)
+        }
 
         searchView.onQueryTextChanged {
             tasksViewModel.searchQuery.value = it
@@ -147,9 +169,15 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
             }
 
             R.id.action_delete_all_completed_tasks -> {
+                tasksViewModel.onDeleteCompletedTasksClicked()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        searchView.setOnQueryTextListener(null)
     }
 }

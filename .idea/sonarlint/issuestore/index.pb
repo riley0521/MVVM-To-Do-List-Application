@@ -27,8 +27,6 @@ P
 app/build.gradle,f\4\f4a01d6a4fcb971362ec00a83903fd3902f52164
 m
 =app/src/main/java/com/farro/mvvmtodo/ui/tasks/TasksAdapter.kt,c\a\ca80f1322def77d8665c05a1dafbf20795e5be95
-t
-Dapp/src/main/java/com/farro/mvvmtodo/ui/tasks/AddEditTaskFragment.kt,1\9\195dcc2c050c557c3185bad40f27644a9109a44c
 S
 #.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
 d
@@ -37,3 +35,9 @@ d
 -app/src/main/res/menu/menu_fragment_tasks.xml,6\a\6a6230eedd13f325a9375a1414a63c8ba36d6e5c
 o
 ?app/src/main/java/com/farro/mvvmtodo/data/PreferencesManager.kt,3\d\3d962d581f330fda942017a1649673f4576e1e92
+b
+2app/src/main/java/com/farro/mvvmtodo/util/Utils.kt,3\6\36d3c6d7ce49bf04cf1052a60993a3c9cb18be69
+{
+Kapp/src/main/java/com/farro/mvvmtodo/ui/addedittask/AddEditTaskViewModel.kt,2\1\2104bce01fb5c077ffa5dca965085c5867b655a6
+z
+Japp/src/main/java/com/farro/mvvmtodo/ui/addedittask/AddEditTaskFragment.kt,f\d\fd18531b628db2cfba21528c12770f7e3e0fd800
