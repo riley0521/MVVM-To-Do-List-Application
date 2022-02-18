@@ -2,14 +2,14 @@
 
 Basic To-Do application with application of clean architecture (without use-case).
 
-### Tech Stack:
+## Tech Stack:
 - Navigation Architecture
 - Dagger Hilt
 - Room Database
 - Kotlin Coroutines and Flow
 - Lifecycle - LiveData and ViewModel
 
-**Screenshots:**
+## Screenshots:
 
 ![Screenshot 2022-02-17 215609](https://user-images.githubusercontent.com/23002188/154496522-2c6cccec-40a4-4fc0-bb34-32244b20fe3a.png)
 ![Screenshot 2022-02-17 215617](https://user-images.githubusercontent.com/23002188/154496527-4e168abb-b653-4ff1-8709-5ccbf301e5e4.png)
