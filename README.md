@@ -4,10 +4,12 @@ Basic To-Do application with application of clean architecture (without use-case
 
 ## Tech Stack:
 - Navigation Architecture
+- Fragment KTX
 - Dagger Hilt
 - Room Database
-- Kotlin Coroutines and Flow
+- Kotlin Coroutines
 - Lifecycle - LiveData and ViewModel
+- DataStore Preferences
 
 ## Screenshots:
 
